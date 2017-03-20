@@ -8,7 +8,7 @@ using namespace boost::asio;
 
 typedef boost::shared_ptr<ip::tcp::socket> socket_ptr;
 
-void echoServer(socket_ptr sock)
+void echo_server(socket_ptr sock)
 {
   boost::system::error_code error;
   char data[1024];
@@ -32,7 +32,7 @@ int main()
   {
     socket_ptr sock(new ip::tcp::socket(io_service));
     acceptor.accept(*sock);
-    boost::thread t(boost::bind(echoServer, sock));     
+    boost::thread t(boost::bind(echo_server, sock));     
   }
   return 0;
 }
