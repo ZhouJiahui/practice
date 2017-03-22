@@ -18,14 +18,14 @@ void MySorter::DoSort() {
   }
   std::stack<std::pair<int, int> > s;
   s.push(std::make_pair(0, numbers_.size() - 1)); 
-  while (s.empty()) {
+  while (!s.empty()) {
     std::pair<int, int> p = s.top();
     s.pop();
     int m = Partition(p.first, p.second);
-    if (p.first < m) {
+    if (p.first < m - 1) {
       s.push(std::make_pair(p.first, m - 1));
     } 
-    if (m < p.second) {
+    if (m + 1 < p.second) {
       s.push(std::make_pair(m + 1, p.second));
     }
   }
@@ -34,7 +34,7 @@ void MySorter::DoSort() {
 int MySorter::Partition(int l, int r) {
   int i = l - 1;
   for (int j = l; j < r; ++j) {
-  if (numbers_[j] < numbers_[r]) {
+  if (numbers_[j] <= numbers_[r]) {
       std::swap(numbers_[++i], numbers_[j]);
     }
   }

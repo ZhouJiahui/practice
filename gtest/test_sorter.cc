@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <iostream>
 #include <stdlib.h>
 #include <vector>
 #include "sorter.h"
@@ -11,12 +12,22 @@ std::vector<int> GenerateRandomVector(int n) {
   return numbers;
 }
 
+void ShowVector(const std::vector<int>& numbers) {
+  std::cout << numbers.size() << std::endl;
+  for (int i = 0; i < numbers.size(); ++i) {
+    std::cout << numbers[i] << " ";
+  }
+  std::cout << std::endl;
+}
+
 void DoTest(int n) {
   std::vector<int> numbers(GenerateRandomVector(n));
   MySorter my_sorter(numbers);
   my_sorter.DoSort();
   StdSorter std_sorter(numbers);
   std_sorter.DoSort();
+  //ShowVector(my_sorter.GetNumbers());
+  //ShowVector(std_sorter.GetNumbers());
   ASSERT_TRUE(my_sorter.GetNumbers() == std_sorter.GetNumbers()); 
 }
 
