@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include "map_client.h"
 
-const int TEST_COUNT = 500;
+const int TEST_COUNT = 100;
 const std::string STRINGS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123567890"; 
 const char *IP = "localhost";
 const char *PORT = "2020";
@@ -38,6 +38,13 @@ void SomeThreadRun(size_t n) {
     threads[i].join();
   }
 }
+
+void OneThreadRunSome(size_t n) {
+  for (size_t i = 0; i < n; ++i) {
+    OneThreadRun();
+  }
+}
+
 TEST(MapServerTest, oneThread) {
   OneThreadRun();
 }
@@ -47,12 +54,24 @@ TEST(MapServerTest, TwoThread) {
   SomeThreadRun(2);
 }
 
+TEST(MapServerTest, OneThreadRunTwice) {
+  OneThreadRunSome(2);
+}
+
 TEST(MapServerTest, ThreeThread) {
   SomeThreadRun(3);
 }
 
+TEST(MapServerTest, OneThreadRunThree) {
+  OneThreadRunSome(3);
+}
+
 TEST(MapServerTest, TenThread) {
   SomeThreadRun(10);
+}
+
+TEST(MapServerTest, OneThreadRunTen) {
+  OneThreadRunSome(10);
 }
 
 int main(int argc, char** argv) {
