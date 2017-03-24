@@ -1,8 +1,9 @@
 #include "map_client.h"
+#include <strings.h>
 #include <iostream>
 #include <vector>
 
-MapClient::MapClient(char *ip, char *port): socket_(io_service_){
+MapClient::MapClient(const char *ip, const char *port): socket_(io_service_){
   boost::asio::ip::tcp::resolver resolver(io_service_);
   boost::asio::ip::tcp::resolver::query query(boost::asio::ip::tcp::v4(), ip, port);
   boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
@@ -80,6 +81,7 @@ bool MapClient::Read(size_t& host_size, std::string& str) {
   return true;
 }
 
+/*
 int main(int argc, char **argv) {
   if (argc < 3) {
     std::cerr << "Usage: map_client <ip> <port>\n";
@@ -91,9 +93,9 @@ int main(int argc, char **argv) {
       MapClient mapClient(argv[1], argv[2]);
       std::vector<std::string> words;
       StringSplit(str, " ", words);
-      if (words.size() == 2 && words[0] == ::GET) {
+      if (words.size() == 2 && strcasecmp(words[0].c_str(), ::GET.c_str()) == 0) {
         std::cout << mapClient.Get(words[1]) << std::endl;
-      } else if (words.size() == 3 && words[0] == ::SET) {
+      } else if (words.size() == 3 && strcasecmp(words[0].c_str(), ::SET.c_str()) == 0) {
         std::cout << mapClient.Set(words[1], words[2]) << std::endl;
       } else {
         std::cout << "unknown input." << std::endl;
@@ -105,3 +107,4 @@ int main(int argc, char **argv) {
   return 0;
 
 }
+*/

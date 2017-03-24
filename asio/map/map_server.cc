@@ -60,7 +60,8 @@ void MapServer::Accept() {
 
 void MapServer::HandleAccept(session_ptr session, const boost::system::error_code& error) {
   if (!error) {
-    std::cout << "accept sucessfully." << std::endl;
+    ++total_count_;
+    std::cout << "#:" << total_count_ << " accept sucessfully." << std::endl;
     session->period = kREADSIZE;
     session->sock.async_read_some(boost::asio::buffer(&session->size, sizeof(session->size)),
                                   boost::bind(&MapServer::HandleCallback,

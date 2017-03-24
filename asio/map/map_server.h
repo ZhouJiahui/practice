@@ -1,5 +1,9 @@
+#ifndef PRACTISE_ASIO_MAPSERVER_H_
+#define PRACTISE_ASIO_MAPSERVER_H_
+
 #include <map>
 #include <string>
+#include <atomic> 
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
@@ -43,6 +47,8 @@ private:
   std::map<std::string, std::string> kv_map_;
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::acceptor acceptor_;
+  std::atomic<size_t> total_count_;
+  std::atomic<size_t> live_count_;
 };
 
-
+#endif // PRACTISE_ASIO_MAPSERVER_H_
