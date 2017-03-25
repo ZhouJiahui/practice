@@ -63,11 +63,11 @@ void MapServer::HandleAccept(session_ptr session, const boost::system::error_cod
     ++total_count_;
     std::cout << "#:" << total_count_ << " accept sucessfully." << std::endl;
     session->period = kREADSIZE;
-    session->sock.async_read_some(boost::asio::buffer(&session->size, sizeof(session->size)),
-                                  boost::bind(&MapServer::HandleCallback,
-                                              this,
-                                              session,  
-                                              boost::asio::placeholders::error));
+    boost::asio::async_read(session->sock, boost::asio::buffer(&session->size, sizeof(session->size)),
+                            boost::bind(&MapServer::HandleCallback,
+                                        this,
+                                        session,  
+                                        boost::asio::placeholders::error));
   } else {
     std::cout << boost::system::system_error(error).what() << std::endl;
   }
@@ -81,11 +81,11 @@ void MapServer::HandleCallback(session_ptr session, const boost::system::error_c
         session->period = kREADDATA;
         session->size = boost::asio::detail::socket_ops::network_to_host_long(session->size);
         std::cout << "kReadSize:" << session->size << std::endl;
-        session->sock.async_read_some(boost::asio::buffer(session->data, session->size),
-                                      boost::bind(&MapServer::HandleCallback,
-                                                  this,
-                                                  session,  
-                                                  boost::asio::placeholders::error));
+        boost::asio::async_read(session->sock, boost::asio::buffer(session->data, session->size),
+                                boost::bind(&MapServer::HandleCallback,
+                                            this,
+                                            session,  
+                                            boost::asio::placeholders::error));
        break;
       case kREADDATA:
         session->str = std::string(session->data, session->data + session->size);
@@ -98,19 +98,19 @@ void MapServer::HandleCallback(session_ptr session, const boost::system::error_c
         }
         session->period = kWRITESIZE; 
         session->size = boost::asio::detail::socket_ops::host_to_network_long(session->size);
-        session->sock.async_write_some(boost::asio::buffer(&session->size, sizeof(session->size)),
-                                      boost::bind(&MapServer::HandleCallback,
-                                                  this,
-                                                  session,  
-                                                  boost::asio::placeholders::error));
+        boost::asio::async_write(session->sock, boost::asio::buffer(&session->size, sizeof(session->size)),
+                                 boost::bind(&MapServer::HandleCallback,
+                                             this,
+                                             session,  
+                                             boost::asio::placeholders::error));
         break;
       case kWRITESIZE:
         session->period = kWRITEDATA;
-        session->sock.async_write_some(boost::asio::buffer(session->data, session->size),
-                                      boost::bind(&MapServer::HandleCallback,
-                                                  this,
-                                                  session,  
-                                                  boost::asio::placeholders::error));
+        boost::asio::async_write(session->sock, boost::asio::buffer(session->data, session->size),
+                                 boost::bind(&MapServer::HandleCallback,
+                                             this,
+                                             session,  
+                                             boost::asio::placeholders::error));
         break;
       case kWRITEDATA:
         std::cout << "kWRITEDATA:Send done." << std::endl;
